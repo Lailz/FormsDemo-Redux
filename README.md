@@ -4,6 +4,10 @@
 
 #### Setup
 
+- Virtual Env Setup
+```shell
+python3 -m venv demo
+```
 1. Clone [backend](https://github.com/lailalelouch/RJS) and run the server
 
 #### Binding a form to state
