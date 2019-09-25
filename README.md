@@ -4,7 +4,11 @@
 
 #### Setup
 
-1. Clone [backend](https://github.com/lailalelouch/RJS) and run the server
+- Virtual Env Setup
+```shell
+python3 -m venv demo
+```
+1. Clone [backend](https://github.com/JoinCODED/RJSDemo8-Forms-Backend) and run the server
 
 #### Binding a form to state
 
@@ -79,7 +83,7 @@ handleSubmit = e => {
   alert("SUBMIT")
 }
 ...
-  <form onSubmit={}>
+  <form onSubmit={event=>this.handleSubmit(event)}>
 ...
 ```
 
@@ -109,7 +113,7 @@ export const submitPerson = data => {
 
 ```javascript
 import { connect } from "react-redux";
-import * as actionCreatores from "./store/actions/index";
+import * as actionCreators from "./store/actions/index";
 ...
     handleSubmit = (e) => {
       e.preventDefault();
@@ -118,7 +122,7 @@ import * as actionCreatores from "./store/actions/index";
 ...
 const mapDispatchToProps = dispatch => {
   return {
-    submitPerson: data => dispatch(actionCreatores.submitPerson(data))
+    submitPerson: data => dispatch(actionCreators.submitPerson(data))
   };
 };
 
@@ -155,8 +159,11 @@ From
 
 to
 
+
 ```javascript
 ...
+export const submitPerson = data => {
+  return async dispatch => {
     try {
       const res = await axios.post("http://127.0.0.1:8000/alias/", data);
       const person = res.data;
