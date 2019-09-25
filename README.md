@@ -14,38 +14,28 @@
 render() {
   return (
     <form>
-      <div className="input-group mb-3">
-        <div className="input-group-prepend">
-          <span className="input-group-text">Alias*</span>
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span className="btn btn-outline-info ">Alias*</span>
+          </div>
+          <input type="text" className="form-control" name="alias" />
         </div>
-        <input
-          type="text"
-          className="form-control"
-          name="alias"
-        />
-      </div>
-      <div className="input-group mb-3">
-        <div className="input-group-prepend">
-          <span className="input-group-text">Description*</span>
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span className="btn btn-outline-info">Description*</span>
+          </div>
+          <input type="text" className="form-control" name="description" />
         </div>
-        <input
-          type="text"
-          className="form-control"
-          name="description"
-        />
-      </div>
-      <div className="input-group mb-3">
-        <div className="input-group-prepend">
-          <span className="input-group-text">E-Mail*</span>
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span className="btn btn-outline-info">E-Mail*</span>
+          </div>
+          <input type="email" className="form-control" name="email" />
         </div>
-        <input
-          type="email"
-          className="form-control"
-          name="email"
-        />
-      </div>
-      <input className="btn btn-outline-dark" type="submit" />
-    </form>
+        <div className="text-center">
+          <input className="btn btn-info" type="submit" />
+        </div>
+      </form>
   );
 }
 ```
