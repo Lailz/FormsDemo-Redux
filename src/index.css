@@ -3,3 +3,7 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.text {
+  border-bottom: 3px solid rgb(73, 160, 181);
+}

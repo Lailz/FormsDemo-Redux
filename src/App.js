@@ -8,8 +8,16 @@ class App extends Component {
   render() {
     return (
       <div className="container">
-        <p className="App-intro">Tell us about yourself:</p>
-        <ControlledForm />
+        <div className="jumbotron mt-3 text-center">
+          <div className="row align-center mb-2">
+            <div className="col-4"></div>
+            <div className="col-4">
+              <h3 className="text">Tell us about yourself:</h3>
+            </div>
+            <div className="col-4"></div>
+          </div>
+          <ControlledForm />
+        </div>
         <PeopleList />
       </div>
     );

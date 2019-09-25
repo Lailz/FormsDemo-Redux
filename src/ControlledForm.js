@@ -5,7 +5,7 @@ import * as actionCreators from "./store/actions";
 
 class ControlledForm extends Component {
   render() {
-    return <div />;
+    return <div></div>;
   }
 }
 
