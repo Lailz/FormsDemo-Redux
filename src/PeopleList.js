@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import * as actionCreators from "./store/actions";
-
 class PersonCard extends Component {
   render() {
     const person = this.props.person;
@@ -21,10 +19,6 @@ class PersonCard extends Component {
 }
 
 class PeopleList extends Component {
-  componentDidMount() {
-    this.props.fetchPeople();
-  }
-
   render() {
     const cards = this.props.people.map(person => (
       <PersonCard key={person.alias} person={person} />
@@ -39,13 +33,4 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchPeople: () => dispatch(actionCreators.fetchPeople())
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PeopleList);
+export default connect(mapStateToProps)(PeopleList);

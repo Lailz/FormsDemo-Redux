@@ -1,4 +1,4 @@
-import * as actionTypes from "../actions/actionTypes";
+import { FETCH_PEOPLE } from "../actions/actionTypes";
 
 const initialState = {
   people: []
@@ -6,7 +6,7 @@ const initialState = {
 
 const postReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.FETCH_PEOPLE:
+    case FETCH_PEOPLE:
       return {
         ...state,
         people: action.payload

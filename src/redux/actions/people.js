@@ -1,4 +1,4 @@
-import * as actionTypes from "./actionTypes";
+import { FETCH_PEOPLE } from "./actionTypes";
 
 import axios from "axios";
 
@@ -8,7 +8,7 @@ export const fetchPeople = () => {
       const res = await axios.get("http://127.0.0.1:8000/alias/");
       const people = res.data;
       dispatch({
-        type: actionTypes.FETCH_PEOPLE,
+        type: FETCH_PEOPLE,
         payload: people
       });
     } catch (error) {
