@@ -4,71 +4,74 @@
 
 #### Setup
 
-- Virtual Env Setup
-```shell
-python3 -m venv demo
-```
 1. Clone [backend](https://github.com/JoinCODED/RJSDemo8-Forms-Backend) and run the server
+
+2. Virtual Env Setup
+
+   ```shell
+   python3 -m venv demo
+   ```
 
 #### Binding a form to state
 
 1. Add the form in `ControlledForm.js`
 
-```jsx
-render() {
-  return (
-    <form>
-        <div className="input-group mb-3">
-          <div className="input-group-prepend">
-            <span className="btn btn-outline-info ">Alias*</span>
-          </div>
-          <input type="text" className="form-control" name="alias" />
-        </div>
-        <div className="input-group mb-3">
-          <div className="input-group-prepend">
-            <span className="btn btn-outline-info">Description*</span>
-          </div>
-          <input type="text" className="form-control" name="description" />
-        </div>
-        <div className="input-group mb-3">
-          <div className="input-group-prepend">
-            <span className="btn btn-outline-info">E-Mail*</span>
-          </div>
-          <input type="email" className="form-control" name="email" />
-        </div>
-        <div className="text-center">
-          <input className="btn btn-info" type="submit" />
-        </div>
-      </form>
-  );
-}
-```
+   ```jsx
+   render() {
+     return (
+       <form>
+           <div className="input-group mb-3">
+             <div className="input-group-prepend">
+               <span className="btn btn-outline-info ">Alias*</span>
+             </div>
+             <input type="text" className="form-control" name="alias" />
+           </div>
+           <div className="input-group mb-3">
+             <div className="input-group-prepend">
+               <span className="btn btn-outline-info">Description*</span>
+             </div>
+             <input type="text" className="form-control" name="description" />
+           </div>
+           <div className="input-group mb-3">
+             <div className="input-group-prepend">
+               <span className="btn btn-outline-info">E-Mail*</span>
+             </div>
+             <input type="email" className="form-control" name="email" />
+           </div>
+           <div className="text-center">
+             <input className="btn btn-info" type="submit" />
+           </div>
+         </form>
+     );
+   }
+   ```
 
 2. Bind the form inputs to state.
    Things to explain:
-   _ State keys have to match backend
-   _ What is `e`? How does it work?
 
-```javascript
-class ControlledForm extends Component {
-    state = {
-        alias: "",
-        description: "",
-        email: ""
-    }
+   - State keys have to match backend
+   - What is `event`? How does it work?
 
-    handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
+   ```javascript
+   class ControlledForm extends Component {
+       state = {
+           alias: "",
+           description: "",
+           email: ""
+       }
 
-    ...
+       handleChange = event => this.setState({ [event.target.name]: event.target.value });
 
-    <input
-      type="text"
-      className="form-control"
-      name="description"
-      onChange={this.handleChange}
-    />
+       ...
 
-```
+       <input
+         type="text"
+         className="form-control"
+         name="description"
+         onChange={this.handleChange}
+       />
+
+   ```
 
 #### Submission
 
@@ -76,44 +79,44 @@ class ControlledForm extends Component {
 
 2. Add an `onSubmit` and prevent default
 
-```javascript
-...
-handleSubmit = e => {
-  e.preventDefault();
-  alert("SUBMIT")
-}
-...
-  <form onSubmit={event=>this.handleSubmit(event)}>
-...
-```
+   ```jsx
+   ...
+   handleSubmit = event => {
+     event.preventDefault();
+     alert("SUBMIT")
+   }
+   ...
+     <form onSubmit={this.handleSubmit}>
+   ...
+   ```
 
 3. We need to DO something when we submit. In `actions/people.js` create the form action to be dispatched
 
-```javascript
-import * as actionTypes from "./actionTypes";
-import axios from "axios";
+   ```javascript
+   import { ADD_PERSON } from "./actionTypes";
+   import axios from "axios";
 
-export const submitPerson = data => {
-  return async dispatch => {
-    try {
-      const res = await axios.post("http://127.0.0.1:8000/alias/", data);
-      dispatch({
-        type: actionTypes.SUBMIT_PERSON,
-        payload: "LOL"
-      });
-    } catch (error) {
-      console.error("Person did not submit!");
-      console.error(error);
-    }
-  };
-};
-```
+   export const submitPerson = person => {
+     return async dispatch => {
+       try {
+         const res = await axios.post("http://127.0.0.1:8000/alias/", person);
+         dispatch({
+           type: ADD_PERSON,
+           payload: "LOL"
+         });
+       } catch (error) {
+         console.error("Person did not submit!");
+         console.error(error);
+       }
+     };
+   };
+   ```
 
 4. Connect it to the submit handler.
 
 ```javascript
 import { connect } from "react-redux";
-import * as actionCreators from "./store/actions/index";
+import { submitPerson } from "./redux/actions/index";
 ...
     handleSubmit = (e) => {
       e.preventDefault();
@@ -122,7 +125,7 @@ import * as actionCreators from "./store/actions/index";
 ...
 const mapDispatchToProps = dispatch => {
   return {
-    submitPerson: data => dispatch(actionCreators.submitPerson(data))
+    submitPerson: person => dispatch(submitPerson(person))
   };
 };
 
@@ -131,263 +134,261 @@ const mapDispatchToProps = dispatch => {
 
 5. Show and tell:
 
-- Show `SUBMIT_PERSON` action in redux tools
-- Show error log for missing data
-- Show new person in list on refresh
-- Discuss missing pieces:
-  - Person should show up without refresh
-  - Form should be cleared after success
-  - User should be told when there are errors and what they are.
+   - Show `ADD_PERSON` action in redux tools
+   - Show error log for missing data
+   - Show new person in list on refresh
+   - Discuss missing pieces:
+     - Person should show up without refresh
+     - Form should be cleared after success
+     - User should be told when there are errors and what they are.
 
 #### Handle successful `POST`
 
 1. In `actions/people.js`, use the person returned from the backend as the payload:
 
-From
+   From
 
-```javascript
-...
-    try {
-      const res = await axios.post("http://127.0.0.1:8000/alias/", data);
-      console.log(res.data); // LOG DATA
-      dispatch({
-        type: actionTypes.SUBMIT_PERSON,
-      });
-    } catch (error) {
-...
-```
+   ```javascript
+   ...
+       try {
+         const res = await axios.post("http://127.0.0.1:8000/alias/", data);
+         console.log(res.data); // LOG DATA
+         dispatch({
+           type: ADD_PERSON,
+         });
+       } catch (error) {
+   ...
+   ```
 
-to
+   to
 
-
-```javascript
-...
-export const submitPerson = data => {
-  return async dispatch => {
-    try {
-      const res = await axios.post("http://127.0.0.1:8000/alias/", data);
-      const person = res.data;
-      dispatch({
-        type: actionTypes.SUBMIT_PERSON,
-        payload: person
-      });
-    } catch (error) {
-...
-```
+   ```javascript
+   ...
+   export const submitPerson = person => {
+     return async dispatch => {
+       try {
+         const res = await axios.post("http://127.0.0.1:8000/alias/", person);
+         const newPerson = res.data;
+         dispatch({
+           type: ADD_PERSON,
+           payload: newPerson
+         });
+       } catch (error) {
+   ...
+   ```
 
 2. Handle the payload in the `reducers/people.js`:
    Explain why we use the spread instead of `concat`.
 
-```javascript
-...
-    case actionTypes.SUBMIT_PERSON:
-      return {
-        ...state,
-         people: [action.payload, ...state.people]
-      };
-...
-```
+   ```javascript
+   ...
+       case ADD_PERSON:
+         return {
+           ...state,
+           people: [action.payload, ...state.people]
+         };
+   ...
+   ```
 
 #### Clear the form on successful post
 
 1. Two-way bind forms inputs to state:
-   Show how changing the STATE now changes the form.
+   In Dev Tools, show how changing the STATE now changes the form.
 
-```javascript
-...
-<input
-  type="text"
-  className="form-control"
-  name="description"
-  value={this.state.description} // This part
-  onChange={this.handleChange}
-/>
-...
-```
+   ```javascript
+   ...
+   <input
+     type="text"
+     className="form-control"
+     name="description"
+     value={this.state.description} // This part
+     onChange={this.handleChange}
+   />
+   ...
+   ```
 
 2. Write a `resetForm` method:
 
-```js
-...
-  resetForm = () => this.setState({ alias: "", description: "", email: "" });
-...
-```
+   ```javascript
+   ...
+     resetForm = () => this.setState({ alias: "", description: "", email: "" });
+   ...
+   ```
 
 3. Pass it to the ACTION to reset on success:
 
-`ControlledForm.js`
+   `ControlledForm.js`
 
-```js
-...
- handleSubmit = e => {
-    e.preventDefault();
-    this.props.submitPerson(this.state, this.resetForm);
-  };
-...
-const mapDispatchToProps = dispatch => {
-  return {
-    submitPerson: (data, reset) => dispatch(actionCreators.submitPerson(data, reset))
-  };
-};
-...
-```
+   ```js
+   ...
+   handleSubmit = e => {
+       e.preventDefault();
+       this.props.submitPerson(this.state, this.resetForm);
+     };
+   ...
+   const mapDispatchToProps = dispatch => {
+     return {
+       submitPerson: (person, reset) => dispatch(actionCreators.submitPerson(person, reset))
+     };
+   };
+   ...
+   ```
 
-`actions/people.js`
+   `actions/people.js`
 
-```js
-export const submitPerson = (data, reset) => {
-  return async dispatch => {
-    try {
-      const res = await axios.post("http://127.0.0.1:8000/alias/", data);
-      const person = res.data;
-      dispatch({
-        type: actionTypes.SUBMIT_PERSON,
-        payload: person
-      });
-      reset();
-    }
-    ...
-  }
-}
-```
+   ```js
+   export const submitPerson = (person, reset) => {
+     return async dispatch => {
+       try {
+         const res = await axios.post("http://127.0.0.1:8000/alias/", person);
+         const newPerson = res.data;
+         dispatch({
+           type: ADD_PERSON,
+           payload: newPerson
+         });
+         reset();
+       }
+       ...
+     }
+   }
+   ```
 
 #### Handling Errors
 
 1. Show `errors.resonse.data` in `reducers/people.js`:
 
-```js
-...
-    } catch (error) {
-      console.error("Person did not submit!");
-      console.error(error.response.data);
-    }
-...
+   ```js
+   ...
+       } catch (error) {
+         console.error("Person did not submit!");
+         console.error(error.response.data);
+       }
+   ...
 
-```
+   ```
 
 2. There are many ways we can use this error object. ONE way is with bootstrap:
 
-```js
-<input
-  type="text"
-  className="form-control is-invalid" // <--- very important
-  name="alias"
-  value={this.state.alias}
-  onChange={this.handleChange}
-/>
-<div className="invalid-feedback">
-  this input is invalid
-</div>
-```
+   ```js
+   <input
+     type="text"
+     className="form-control is-invalid" // <--- very important
+     name="alias"
+     value={this.state.alias}
+     onChange={this.handleChange}
+   />
+   <div className="invalid-feedback">
+     this input is invalid
+   </div>
+   ```
 
 3. Create an error object and use it to conditionally change the class and message:
 
-```js
-...
-  render() {
-    const errors = {
-      alias: ["the alias is wrong"],
-      description: ["the description is wrong"],
-      email: ["the email is wrong"]
-    };
-    ...
-    <input
-      type="text"
-      className={`form-control ${errors.alias && "is-invalid"}`}
-      name="alias"
-      value={this.state.alias}
-      onChange={this.handleChange}
-    />
-    <div className="invalid-feedback">{errors.alias}</div>
-    ...
-```
+   ```js
+   ...
+     render() {
+       const errors = {
+         alias: ["the alias is wrong"],
+         description: ["the description is wrong"],
+         email: ["the email is wrong"]
+       };
+       ...
+       <input
+         type="text"
+         className={`form-control ${errors.alias && "is-invalid"}`}
+         name="alias"
+         value={this.state.alias}
+         onChange={this.handleChange}
+       />
+       <div className="invalid-feedback">{errors.alias}</div>
+       ...
+   ```
 
 4. Connect the submission errors to redux (show state in dev tools):
-   `actionTypes.js`
 
-```js
-export const FETCH_PEOPLE = "FETCH_PEOPLE";
-export const SUBMIT_PERSON = "SUBMIT_PERSON";
-export const SET_ERRORS = "SET_ERRORS";
-```
+   ```js
+   export const FETCH_PEOPLE = "FETCH_PEOPLE";
+   export const ADD_PERSON = "ADD_PERSON";
+   export const SET_ERRORS = "SET_ERRORS";
+   ```
 
-`reducers/errors.js`
+   `reducers/errors.js`
 
-```js
-import * as actionTypes from "../actions/actionTypes";
+   ```js
+   import { SET_ERRORS } from "../actions/actionTypes";
 
-const initialState = {};
+   const initialState = {};
 
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case actionTypes.SET_ERRORS:
-      return action.payload;
-    default:
-      return state;
-  }
-};
-```
+   export default (state = initialState, action) => {
+     switch (action.type) {
+       case SET_ERRORS:
+         return action.payload;
+       default:
+         return state;
+     }
+   };
+   ```
 
-`src/index.js`
+   `src/index.js`
 
-```js
-...
-import peopleReducer from "./store/reducers/people";
-import errorReducer from "./store/reducers/errors";
+   ```js
+   ...
+   import peopleReducer from "./store/reducers/people";
+   import errorReducer from "./store/reducers/errors";
 
-const rootReducer = combineReducers({
-  rootPeople: peopleReducer,
-  errors: errorReducer
-});
-...
-```
+   const rootReducer = combineReducers({
+     rootPeople: peopleReducer,
+     errors: errorReducer
+   });
+   ...
+   ```
 
-`actions/people.js`
+   `actions/people.js`
 
-```js
-...
-    } catch (error) {
-      console.error("Person did not submit!");
-      dispatch({
-        type: actionTypes.SET_ERRORS,
-        payload: error.response.data
-      });
-    }
-...
-```
+   ```js
+   ...
+       } catch (error) {
+         console.error("Person did not submit!");
+         dispatch({
+           type: SET_ERRORS,
+           payload: error.response.data
+         });
+       }
+   ...
+   ```
 
 5. Bring errors into `ControlledForm.js`:
 
-```js
-...
-  const errors = this.props.errors;
-  ...
-  const mapStateToProps = state => {
-    return {
-      errors: state.errors
-    };
-  };
-...
-```
+   ```js
+   ...
+     const errors = this.props.errors;
+     ...
+     const mapStateToProps = state => {
+       return {
+         errors: state.errors
+       };
+     };
+   ...
+   ```
 
 6. Reset the errors on success:
 
-`actions/people.js`
+   `actions/people.js`
 
-```js
-...
-    try {
-      const res = await axios.post("http://127.0.0.1:8000/alias/", data);
-      const person = res.data;
-      dispatch({
-        type: actionTypes.SUBMIT_PERSON,
-        payload: person
-      });
-      dispatch({
-        type: actionTypes.SET_ERRORS,
-        payload: {}
-      });
-      reset();
-    }
-...
-```
+   ```js
+   ...
+       try {
+         const res = await axios.post("http://127.0.0.1:8000/alias/", data);
+         const person = res.data;
+         dispatch({
+           type: ADD_PERSON,
+           payload: person
+         });
+         dispatch({
+           type: SET_ERRORS,
+           payload: {}
+         });
+         reset();
+       }
+   ...
+   ```
