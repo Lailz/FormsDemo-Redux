@@ -96,19 +96,17 @@
    import { ADD_PERSON } from "./actionTypes";
    import axios from "axios";
 
-   export const submitPerson = person => {
-     return async dispatch => {
-       try {
-         const res = await axios.post("http://127.0.0.1:8000/alias/", person);
-         dispatch({
-           type: ADD_PERSON,
-           payload: "LOL"
-         });
-       } catch (error) {
-         console.error("Person did not submit!");
-         console.error(error);
-       }
-     };
+   export const submitPerson = person => async dispatch => {
+     try {
+       const res = await axios.post("http://127.0.0.1:8000/alias/", person);
+       dispatch({
+         type: ADD_PERSON,
+         payload: "LOL"
+       });
+     } catch (error) {
+       console.error("Person did not submit!");
+       console.error(error);
+     }
    };
    ```
 
@@ -337,7 +335,7 @@ const mapDispatchToProps = dispatch => {
    import errorReducer from "./store/reducers/errors";
 
    const rootReducer = combineReducers({
-     rootPeople: peopleReducer,
+     peopleState: peopleReducer,
      errors: errorReducer
    });
    ...

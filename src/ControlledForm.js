@@ -12,11 +12,9 @@ class ControlledForm extends Component {
 const mapStateToProps = state => {
   return {};
 };
+
 const mapDispatchToProps = dispatch => {
   return {};
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ControlledForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ControlledForm);
