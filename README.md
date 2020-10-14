@@ -17,33 +17,29 @@
 1. Add the form in `ControlledForm.js`
 
    ```jsx
-   render() {
-     return (
-       <form>
-           <div className="input-group mb-3">
-             <div className="input-group-prepend">
-               <span className="btn btn-outline-info ">Alias*</span>
-             </div>
-             <input type="text" className="form-control" name="alias" />
-           </div>
-           <div className="input-group mb-3">
-             <div className="input-group-prepend">
-               <span className="btn btn-outline-info">Description*</span>
-             </div>
-             <input type="text" className="form-control" name="description" />
-           </div>
-           <div className="input-group mb-3">
-             <div className="input-group-prepend">
-               <span className="btn btn-outline-info">E-Mail*</span>
-             </div>
-             <input type="email" className="form-control" name="email" />
-           </div>
-           <div className="text-center">
-             <input className="btn btn-info" type="submit" />
-           </div>
-         </form>
-     );
-   }
+   <form>
+     <div className="input-group mb-3">
+       <div className="input-group-prepend">
+         <span className="btn btn-outline-info ">Alias*</span>
+       </div>
+       <input type="text" className="form-control" name="alias" />
+     </div>
+     <div className="input-group mb-3">
+       <div className="input-group-prepend">
+         <span className="btn btn-outline-info">Description*</span>
+       </div>
+       <input type="text" className="form-control" name="description" />
+     </div>
+     <div className="input-group mb-3">
+       <div className="input-group-prepend">
+         <span className="btn btn-outline-info">E-Mail*</span>
+       </div>
+       <input type="email" className="form-control" name="email" />
+     </div>
+     <div className="text-center">
+       <input className="btn btn-info" type="submit" />
+     </div>
+   </form>
    ```
 
 2. Bind the form inputs to state.
@@ -53,14 +49,15 @@
    - What is `event`? How does it work?
 
    ```javascript
-   class ControlledForm extends Component {
-       state = {
+   const ControlledForm = () => {
+     const [person, setPerson] = useState({
            alias: "",
            description: "",
            email: ""
-       }
+       });
 
-       handleChange = event => this.setState({ [event.target.name]: event.target.value });
+
+       const handleChange = event => setPerson({...person, [event.target.name]: event.target.value });
 
        ...
 
@@ -68,7 +65,7 @@
          type="text"
          className="form-control"
          name="description"
-         onChange={this.handleChange}
+         onChange={handleChange}
        />
 
    ```
@@ -81,12 +78,12 @@
 
    ```jsx
    ...
-   handleSubmit = event => {
+   const handleSubmit = event => {
      event.preventDefault();
      alert("SUBMIT")
    }
    ...
-     <form onSubmit={this.handleSubmit}>
+     <form onSubmit={handleSubmit}>
    ...
    ```
 
@@ -96,12 +93,12 @@
    import { ADD_PERSON } from "./actionTypes";
    import axios from "axios";
 
-   export const submitPerson = person => async dispatch => {
+   export const submitPerson = (person) => async (dispatch) => {
      try {
        const res = await axios.post("http://127.0.0.1:8000/alias/", person);
        dispatch({
          type: ADD_PERSON,
-         payload: "LOL"
+         payload: "LOL",
        });
      } catch (error) {
        console.error("Person did not submit!");
@@ -114,11 +111,11 @@
 
 ```javascript
 import { connect } from "react-redux";
-import { submitPerson } from "./redux/actions/index";
+import { submitPerson } from "./redux/actions";
 ...
     handleSubmit = (e) => {
       e.preventDefault();
-      this.props.submitPerson(this.state);
+      props.submitPerson(person);
     }
 ...
 const mapDispatchToProps = dispatch => {
@@ -199,8 +196,8 @@ const mapDispatchToProps = dispatch => {
      type="text"
      className="form-control"
      name="description"
-     value={this.state.description} // This part
-     onChange={this.handleChange}
+     value={person.description} // This part
+     onChange={handleChange}
    />
    ...
    ```
@@ -209,7 +206,7 @@ const mapDispatchToProps = dispatch => {
 
    ```javascript
    ...
-     resetForm = () => this.setState({ alias: "", description: "", email: "" });
+     const resetForm = () => setPerson({ alias: "", description: "", email: "" });
    ...
    ```
 
@@ -219,14 +216,14 @@ const mapDispatchToProps = dispatch => {
 
    ```js
    ...
-   handleSubmit = e => {
+   const handleSubmit = e => {
        e.preventDefault();
-       this.props.submitPerson(this.state, this.resetForm);
+       props.submitPerson(person, resetForm);
      };
    ...
    const mapDispatchToProps = dispatch => {
      return {
-       submitPerson: (person, reset) => dispatch(actionCreators.submitPerson(person, reset))
+       submitPerson: (person, reset) => dispatch(submitPerson(person, reset))
      };
    };
    ...
@@ -253,7 +250,7 @@ const mapDispatchToProps = dispatch => {
 
 #### Handling Errors
 
-1. Show `errors.resonse.data` in `reducers/people.js`:
+1. Show `errors.response.data` in `reducers/people.js`:
 
    ```js
    ...
@@ -359,7 +356,7 @@ const mapDispatchToProps = dispatch => {
 
    ```js
    ...
-     const errors = this.props.errors;
+     const errors = props.errors;
      ...
      const mapStateToProps = state => {
        return {
