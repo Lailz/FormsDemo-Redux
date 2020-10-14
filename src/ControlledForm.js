@@ -1,19 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 import {} from "./redux/actions";
 
-class ControlledForm extends Component {
-  render() {
-    return <div></div>;
-  }
-}
+const ControlledForm = () => {
+  return <div></div>;
+};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
