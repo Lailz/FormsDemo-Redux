@@ -1,15 +1,14 @@
-import { FETCH_PEOPLE } from "../actions/actionTypes";
+import people from "../people";
 
 const initialState = {
-  people: []
+  people: people,
 };
 
 const postReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_PEOPLE:
+    case "ADD_PERSON":
       return {
         ...state,
-        people: action.payload
       };
     default:
       return state;
