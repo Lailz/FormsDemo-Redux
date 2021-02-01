@@ -9,6 +9,7 @@ const postReducer = (state = initialState, action) => {
     case "ADD_PERSON":
       return {
         ...state,
+        people: [...state.people, action.payload.newPerson],
       };
     default:
       return state;
